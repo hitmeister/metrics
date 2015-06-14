@@ -1,6 +1,6 @@
 <?php
 /**
- * User: Maksim Naumov <fromyukki@gmail.com>
+ * User: Maksim Naumov <maksim.naumov@hitmeister.de>
  * Date: 6/14/15
  * Time: 12:44 PM
  */
