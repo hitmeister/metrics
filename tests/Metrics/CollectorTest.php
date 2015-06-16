@@ -10,7 +10,13 @@ namespace Hitmeister\Component\Metrics\Tests;
 use Hitmeister\Component\Metrics\Buffer\BufferInterface;
 use Hitmeister\Component\Metrics\Collector;
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
-use Hitmeister\Component\Metrics\Metric;
+use Hitmeister\Component\Metrics\Metric\AbstractMetric;
+use Hitmeister\Component\Metrics\Metric\CounterMetric;
+use Hitmeister\Component\Metrics\Metric\GaugeMetric;
+use Hitmeister\Component\Metrics\Metric\MemoryMetric;
+use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
+use Hitmeister\Component\Metrics\Metric\TimerMetric;
+use Hitmeister\Component\Metrics\Metric\UniqueMetric;
 use Mockery as m;
 
 class CollectorTest extends \PHPUnit_Framework_TestCase
@@ -149,7 +155,7 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 		/** @var m\MockInterface|BufferInterface $mockBuffer */
 		$mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
 		$mockBuffer->shouldReceive('addBatch')->with(m::on(function($metrics){
-			if (count($metrics) == 1 && $metrics[0] instanceof Metric\CounterMetric) {
+			if (count($metrics) == 1 && $metrics[0] instanceof CounterMetric) {
 				return true;
 			}
 			return false;
@@ -172,7 +178,7 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 		$mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
 		$mockBuffer->shouldReceive('addBatch')->with(m::on(function($metrics){
 			if (count($metrics) == 2) {
-				if ($metrics[0] instanceof Metric\CounterMetric && $metrics[1] instanceof Metric\CounterMetric) {
+				if ($metrics[0] instanceof CounterMetric && $metrics[1] instanceof CounterMetric) {
 					return true;
 				}
 			}
@@ -235,10 +241,10 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @return m\MockInterface|Metric
+	 * @return m\MockInterface|AbstractMetric
 	 */
 	protected function mockMetric()
 	{
-		return m::mock('\Hitmeister\Component\Metrics\Metric');
+		return m::mock('\Hitmeister\Component\Metrics\Metric\AbstractMetric');
 	}
 }

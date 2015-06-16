@@ -8,8 +8,6 @@
 
 namespace Hitmeister\Component\Metrics\Metric;
 
-use Hitmeister\Component\Metrics\Metric;
-
 /**
  * Class TimerMetric
  *

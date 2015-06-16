@@ -8,14 +8,14 @@
 
 namespace Hitmeister\Component\Metrics\Buffer;
 
-use Hitmeister\Component\Metrics\Metric;
+use Hitmeister\Component\Metrics\Metric\AbstractMetric;
 
 class ImmediateBuffer extends Buffer
 {
 	/**
 	 * @inheritdoc
 	 */
-	public function add(Metric $metric)
+	public function add(AbstractMetric $metric)
 	{
 		if ($this->handler) {
 			return $this->handler->handle($metric);

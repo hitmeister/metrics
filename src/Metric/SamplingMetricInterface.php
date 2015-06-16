@@ -1,12 +1,18 @@
 <?php
 /**
- * User: Maksim Naumov <fromyukki@gmail.com>
+ * Created for Hitmeister Project.
+ * User: Maksim Naumov <maksim.naumov@hitmeister.de>
  * Date: 6/16/15
  * Time: 9:52 PM
  */
 
 namespace Hitmeister\Component\Metrics\Metric;
 
+/**
+ * Interface SamplingMetricInterface
+ *
+ * @package Hitmeister\Component\Metrics\Metric
+ */
 interface SamplingMetricInterface
 {
     /**

@@ -6,9 +6,11 @@
  * Time: 09:49
  */
 
-namespace Hitmeister\Component\Metrics;
+namespace Hitmeister\Component\Metrics\Metric;
 
-abstract class Metric
+use Hitmeister\Component\Metrics\Helper;
+
+abstract class AbstractMetric
 {
 	/**
 	 * Metric name.

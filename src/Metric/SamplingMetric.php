@@ -1,15 +1,19 @@
 <?php
 /**
- * User: Maksim Naumov <fromyukki@gmail.com>
+ * Created for Hitmeister Project.
+ * User: Maksim Naumov <maksim.naumov@hitmeister.de>
  * Date: 6/16/15
  * Time: 9:54 PM
  */
 
 namespace Hitmeister\Component\Metrics\Metric;
 
-use Hitmeister\Component\Metrics\Metric;
-
-abstract class SamplingMetric extends Metric implements SamplingMetricInterface
+/**
+ * Class SamplingMetric
+ *
+ * @package Hitmeister\Component\Metrics\Metric
+ */
+abstract class SamplingMetric extends AbstractMetric implements SamplingMetricInterface
 {
     /**
      * @var float

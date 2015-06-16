@@ -9,7 +9,7 @@
 namespace Hitmeister\Component\Metrics\Tests\Buffer;
 
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
-use Hitmeister\Component\Metrics\Metric;
+use Hitmeister\Component\Metrics\Metric\AbstractMetric;
 use Mockery as m;
 
 abstract class BufferTestCase extends \PHPUnit_Framework_TestCase
@@ -41,10 +41,10 @@ abstract class BufferTestCase extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @return m\MockInterface|Metric
+	 * @return m\MockInterface|AbstractMetric
 	 */
 	protected function mockMetric()
 	{
-		return m::mock('\Hitmeister\Component\Metrics\Metric');
+		return m::mock('\Hitmeister\Component\Metrics\Metric\AbstractMetric');
 	}
 }

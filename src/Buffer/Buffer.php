@@ -9,7 +9,7 @@
 namespace Hitmeister\Component\Metrics\Buffer;
 
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
-use Hitmeister\Component\Metrics\Metric;
+use Hitmeister\Component\Metrics\Metric\AbstractMetric;
 
 abstract class Buffer implements BufferInterface
 {
@@ -23,7 +23,7 @@ abstract class Buffer implements BufferInterface
 	/**
 	 * Batch of metrics in buffer.
 	 *
-	 * @var Metric[]
+	 * @var AbstractMetric[]
 	 */
 	protected $metrics = [];
 
@@ -39,7 +39,7 @@ abstract class Buffer implements BufferInterface
 	/**
 	 * @inheritdoc
 	 */
-	public function add(Metric $metric)
+	public function add(AbstractMetric $metric)
 	{
 		$metric->touch();
 		$this->metrics[] = $metric;
@@ -53,7 +53,7 @@ abstract class Buffer implements BufferInterface
 	{
         $now = (int)(microtime(true) * 1000);
 		foreach ($metrics as $metric) {
-			if ($metric instanceof Metric) {
+			if ($metric instanceof AbstractMetric) {
 				$metric->setTime($now);
 				$this->metrics[] = $metric;
 			}

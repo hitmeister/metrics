@@ -8,7 +8,7 @@
 
 namespace Hitmeister\Component\Metrics\Tests\Metric;
 
-use Hitmeister\Component\Metrics\Metric;
+use Hitmeister\Component\Metrics\Metric\AbstractMetric;
 
 abstract class MetricTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -47,10 +47,10 @@ abstract class MetricTestCase extends \PHPUnit_Framework_TestCase
 	 * Test create function
 	 *
 	 * @dataProvider createProvider
-	 * @param Metric $metric
+	 * @param AbstractMetric $metric
 	 * @param array  $expected
 	 */
-	public function testCreate(Metric $metric, array $expected)
+	public function testCreate(AbstractMetric $metric, array $expected)
 	{
 		list($name, $value, $tags, $time) = $expected;
 		$this->assertEquals($name, $metric->getName());
@@ -64,7 +64,7 @@ abstract class MetricTestCase extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSetGet()
 	{
-		/** @var Metric $metric */
+		/** @var AbstractMetric $metric */
 		$metric = new $this->className('metric', 1);
 
 		// Create values

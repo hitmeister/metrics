@@ -10,7 +10,7 @@ namespace Hitmeister\Component\Metrics;
 use Hitmeister\Component\Metrics\Buffer\BufferInterface;
 use Hitmeister\Component\Metrics\Buffer\ImmediateBuffer;
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
-use Hitmeister\Component\Metrics\Metric\CounterMetric;
+use Hitmeister\Component\Metrics\Metric\AbstractMetric;
 use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
 use Psr\Log\LoggerInterface;
 
@@ -196,10 +196,10 @@ class Collector
 	/**
 	 * Adds metric into the buffer
 	 *
-	 * @param Metric $metric
+	 * @param AbstractMetric $metric
 	 * @return $this
 	 */
-	public function buffer(Metric $metric)
+	public function buffer(AbstractMetric $metric)
 	{
 		try {
 			$this->buffer->add($metric);
@@ -219,7 +219,7 @@ class Collector
 	/**
 	 * Adds batch of metrics into the buffer
 	 *
-	 * @param Metric[] $metrics
+	 * @param AbstractMetric[] $metrics
 	 * @return $this
 	 */
 	public function bufferBatch(array $metrics)
