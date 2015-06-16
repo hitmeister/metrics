@@ -1,0 +1,28 @@
+<?php
+/**
+ * Created for Hitmeister Project.
+ * User: Maksim Naumov <maksim.naumov@hitmeister.de>
+ * Date: 16/06/15
+ * Time: 11:37
+ */
+
+namespace Hitmeister\Component\Metrics\Tests\Metric;
+
+use Hitmeister\Component\Metrics\Metric\UniqueMetric;
+
+class UniqueMetricTest extends MetricTestCase
+{
+	/**
+	 * @inheritdoc
+	 */
+	protected $className = '\Hitmeister\Component\Metrics\Metric\UniqueMetric';
+
+	/**
+	 * @inheritdoc
+	 */
+	public function testType()
+	{
+		$metric = new UniqueMetric('name', 1);
+		$this->assertEquals('unique', $metric->getType());
+	}
+}
