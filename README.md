@@ -9,27 +9,22 @@ Metrics forwarder for PHP.
 ## Some benchmarks
 
 ```
-Hitmeister\Component\Metrics\Benchmarks\Collector\NoHandler\BaseEvent
-    Method Name                 Iterations    Average Time      Ops/second
-    -------------------------  ------------  --------------    -------------
-    counterOnlyName          : [1,000     ] [0.0000134799480] [74,184.26219]
-    counterOnlyNameMultiValue: [1,000     ] [0.0000136814117] [73,091.87230]
+Hitmeister\Component\Metrics\Benchmarks\Collector\NoHandlerEvent
+    Method Name                       Iterations    Average Time      Ops/second
+    -------------------------------  ------------  --------------    -------------
+    counterName                    : [1,000     ] [0.0000184316635] [54,254.46267]
+    counterNameMultiValue          : [1,000     ] [0.0000161714554] [61,837.35331]
+    counterPrefixName              : [1,000     ] [0.0000188796520] [52,967.07793]
+    counterPrefixNameMultiValue    : [1,000     ] [0.0000159733295] [62,604.35542]
+    counterTagsName                : [1,000     ] [0.0000166232586] [60,156.67714]
+    counterTagsNameMultiValue      : [1,000     ] [0.0000156123638] [64,051.79970]
+    counterTagsNamePrefix          : [1,000     ] [0.0000152444839] [65,597.49765]
+    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000145139694] [68,899.13923]
 
-Hitmeister\Component\Metrics\Benchmarks\Collector\NoHandler\PrefixEvent
-    Method Name                 Iterations    Average Time      Ops/second
-    -------------------------  ------------  --------------    -------------
-    counterOnlyName          : [1,000     ] [0.0000141932964] [70,455.79614]
-    counterOnlyNameMultiValue: [1,000     ] [0.0000139153004] [71,863.34276]
-
-Hitmeister\Component\Metrics\Benchmarks\Collector\NoHandler\TagsEvent
-    Method Name                 Iterations    Average Time      Ops/second
-    -------------------------  ------------  --------------    -------------
-    counterOnlyName          : [1,000     ] [0.0000158238411] [63,195.78123]
-    counterOnlyNameMultiValue: [1,000     ] [0.0000134763718] [74,203.94877]
-
-Hitmeister\Component\Metrics\Benchmarks\Collector\NoHandler\TagsPrefixEvent
-    Method Name                 Iterations    Average Time      Ops/second
-    -------------------------  ------------  --------------    -------------
-    counterOnlyName          : [1,000     ] [0.0000142233372] [70,306.98828]
-    counterOnlyNameMultiValue: [1,000     ] [0.0000147016048] [68,019.78496]
+Hitmeister\Component\Metrics\Benchmarks\Formatter\StatsDaemonEvent
+    Method Name                Iterations    Average Time      Ops/second
+    ------------------------  ------------  --------------    -------------
+    counterName             : [10,000    ] [0.0000078526735] [127,345.16418]
+    counterNameAndTags      : [1,000     ] [0.0000262596607] [38,081.22316]
+    counterNameTagsAndSample: [1,000     ] [0.0000238325596] [41,959.40417]
 ```
