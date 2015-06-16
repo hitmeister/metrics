@@ -272,7 +272,7 @@ class Collector
 	 * Counts one or more metrics.
 	 *
 	 * @param string|array $names
-	 * @param int          $value
+	 * @param mixed        $value
 	 * @param float        $sampleRate
 	 * @return $this
 	 */
@@ -280,7 +280,7 @@ class Collector
 	{
 		$metrics = [];
 		foreach ((array)$names as $name) {
-			$metric = new CounterMetric($name, $value, $this->tags);
+			$metric = new CounterMetric($this->metricPrefix.$name, $value, $this->tags);
 			$metric->setSampleRate($sampleRate);
 			$metrics[] = $metric;
 		}
@@ -351,7 +351,7 @@ class Collector
 	{
 		$metrics = [];
 		foreach ((array)$names as $name) {
-			$metric = new $className($name, $value, $this->tags);
+			$metric = new $className($this->metricPrefix.$name, $value, $this->tags);
 			$metrics[] = $metric;
 		}
 		return $metrics;
