@@ -304,11 +304,12 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param int          $value
+     * @param float        $sampleRate
 	 * @return $this
 	 */
-	public function memory($names, $value)
+	public function memory($names, $value, $sampleRate = 1.0)
 	{
-		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\MemoryMetric', $names, $value);
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\MemoryMetric', $names, $value, $sampleRate);
 		return $this->bufferBatch($metrics);
 	}
 

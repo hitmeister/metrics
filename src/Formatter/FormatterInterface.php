@@ -14,13 +14,13 @@ interface FormatterInterface
 {
     /**
      * @param Metric $metric
-     * @return bool
+     * @return mixed|false
      */
     public function format(Metric $metric);
 
     /**
      * @param Metric[] $metrics
-     * @return bool
+     * @return array
      */
     public function formatBatch(array $metrics);
 }
