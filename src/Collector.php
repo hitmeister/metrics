@@ -11,6 +11,7 @@ use Hitmeister\Component\Metrics\Buffer\BufferInterface;
 use Hitmeister\Component\Metrics\Buffer\ImmediateBuffer;
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
 use Hitmeister\Component\Metrics\Metric\CounterMetric;
+use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
 use Psr\Log\LoggerInterface;
 
 class Collector
@@ -278,13 +279,8 @@ class Collector
 	 */
 	public function counter($names, $value, $sampleRate = 1.0)
 	{
-		$metrics = [];
-		foreach ((array)$names as $name) {
-			$metric = new CounterMetric($this->metricPrefix.$name, $value, $this->tags);
-			$metric->setSampleRate($sampleRate);
-			$metrics[] = $metric;
-		}
-		return $this->bufferBatch($metrics);
+        $metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\CounterMetric', $names, $value, $sampleRate);
+        return $this->bufferBatch($metrics);
 	}
 
 	/**
@@ -293,11 +289,12 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param int          $value
+     * @param float        $sampleRate
 	 * @return $this
 	 */
-	public function timer($names, $value)
+	public function timer($names, $value, $sampleRate = 1.0)
 	{
-		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\TimerMetric', $names, $value);
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\TimerMetric', $names, $value, $sampleRate);
 		return $this->bufferBatch($metrics);
 	}
 
@@ -345,13 +342,17 @@ class Collector
 	 * @param string       $className
 	 * @param string|array $names
 	 * @param mixed        $value
+     * @param float        $sampleRate
 	 * @return array
 	 */
-	private function createMetrics($className, $names, $value)
+	protected function createMetrics($className, $names, $value, $sampleRate = 1.0)
 	{
 		$metrics = [];
 		foreach ((array)$names as $name) {
 			$metric = new $className($this->metricPrefix.$name, $value, $this->tags);
+            if (1.0 != $sampleRate && $metric instanceof SamplingMetricInterface) {
+                $metric->setSampleRate($sampleRate);
+            }
 			$metrics[] = $metric;
 		}
 		return $metrics;

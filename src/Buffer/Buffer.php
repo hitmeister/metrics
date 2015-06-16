@@ -51,9 +51,10 @@ abstract class Buffer implements BufferInterface
 	 */
 	public function addBatch(array $metrics)
 	{
+        $now = (int)(microtime(true) * 1000);
 		foreach ($metrics as $metric) {
 			if ($metric instanceof Metric) {
-				$metric->touch();
+				$metric->setTime($now);
 				$this->metrics[] = $metric;
 			}
 		}

@@ -84,7 +84,7 @@ class ManualBufferTest extends BufferTestCase
 		$batch = [];
 		for ($i = 0; $i < $count; $i++) {
 			$metric = $this->mockMetric();
-			$metric->shouldReceive('touch');
+			$metric->shouldReceive('setTime');
 			$batch[] = $metric;
 		}
 		return $batch;

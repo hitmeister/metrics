@@ -17,7 +17,7 @@ use Hitmeister\Component\Metrics\Metric;
  *
  * @package Hitmeister\Component\Metrics\Metric
  */
-class TimerMetric extends Metric
+class TimerMetric extends SamplingMetric
 {
 	/**
 	 * @inheritdoc

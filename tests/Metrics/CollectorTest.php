@@ -231,7 +231,7 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 
 		$collector = new Collector();
 		$collector->setBuffer($mockBuffer);
-		$collector->$function($names, 10);
+		$collector->$function($names, 10, 0.2);
 	}
 
 	/**
