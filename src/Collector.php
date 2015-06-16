@@ -7,356 +7,355 @@
 
 namespace Hitmeister\Component\Metrics;
 
+use Hitmeister\Component\Metrics\Buffer\BufferInterface;
+use Hitmeister\Component\Metrics\Buffer\ImmediateBuffer;
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
+use Hitmeister\Component\Metrics\Metric\Metric;
+use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
+use Psr\Log\LoggerInterface;
 
 class Collector
 {
-    /**
-     * @var HandlerInterface
-     */
-    private $handler;
+	/**
+	 * Logger interface.
+	 * If set it will log only errors.
+	 *
+	 * @var LoggerInterface
+	 */
+	private $logger;
 
-    /**
-     * @var array
-     */
-    private $globalTags = [];
+	/**
+	 * Prefix for metrics.
+	 *
+	 * @var string
+	 */
+	private $metricPrefix = '';
 
-    /**
-     * Do not throw any Exceptions on write operations
-     * @var bool
-     */
-    private $silentOnWrite = true;
+	/**
+	 * Tags will be added to each metric.
+	 * For example: env or server name.
+	 *
+	 * @var array
+	 */
+	private $tags = [];
 
-    /**
-     * @var bool
-     */
-    private $flushOnShutdown = false;
+	/**
+	 * Buffer for metrics.
+	 *
+	 * @var BufferInterface
+	 */
+	private $buffer;
 
-    /**
-     * @var bool
-     */
-    private $shutdownRegistered = false;
+	/**
+	 * Creates new instance of Collector
+	 */
+	public function __construct()
+	{
+		$this->buffer = new ImmediateBuffer();
+	}
 
-    /**
-     * @var array
-     */
-    private $metrics = [];
+	/**
+	 * Returns logger.
+	 *
+	 * @return LoggerInterface
+	 * @codeCoverageIgnore
+	 */
+	public function getLogger()
+	{
+		return $this->logger;
+	}
 
-    /**
-     * @var array
-     */
-    private $timers = [];
+	/**
+	 * Sets logger.
+	 *
+	 * @param LoggerInterface $logger
+	 * @return $this
+	 * @codeCoverageIgnore
+	 */
+	public function setLogger(LoggerInterface $logger)
+	{
+		$this->logger = $logger;
+		return $this;
+	}
 
-    /**
-     * @var array
-     */
-    private $memory = [];
+	/**
+	 * Returns metric prefix.
+	 *
+	 * @return string
+	 */
+	public function getMetricPrefix()
+	{
+		return $this->metricPrefix;
+	}
 
-    /**
-     * @param HandlerInterface $handler
-     */
-    public function __construct(HandlerInterface $handler)
-    {
-        $this->handler = $handler;
-    }
+	/**
+	 * Sets metric prefix.
+	 *
+	 * @param string $metricPrefix
+	 * @return $this
+	 */
+	public function setMetricPrefix($metricPrefix)
+	{
+		$this->metricPrefix = (string)$metricPrefix;
+		return $this;
+	}
 
-    /**
-     * @return HandlerInterface
-     */
-    public function getHandler()
-    {
-        return $this->handler;
-    }
+	/**
+	 * Returns true if collector hs tags
+	 *
+	 * @return bool
+	 */
+	public function hasTags()
+	{
+		return !empty($this->tags);
+	}
 
-    /**
-     * @return bool
-     */
-    public function hasGlobalTags()
-    {
-        return !empty($this->globalTags);
-    }
+	/**
+	 * Returns tags.
+	 *
+	 * @return array
+	 */
+	public function getTags()
+	{
+		return $this->tags;
+	}
 
-    /**
-     * @return array
-     */
-    public function getGlobalTags()
-    {
-        return $this->globalTags;
-    }
+	/**
+	 * Sets tags.
+	 *
+	 * @param array $tags
+	 * @return $this
+	 */
+	public function setTags(array $tags)
+	{
+		$this->tags = $tags;
+		return $this;
+	}
 
-    /**
-     * @param array $tags
-     * @return Collector
-     */
-    public function setGlobalTags(array $tags)
-    {
-        $this->globalTags = $tags;
-        return $this;
-    }
+	/**
+	 * Adds tag.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @return $this
+	 */
+	public function addTag($key, $value)
+	{
+		$this->tags[$key] = $value;
+		return $this;
+	}
 
-    /**
-     * @param string $key
-     * @param string $value
-     * @return Collector
-     */
-    public function addGlobalTag($key, $value)
-    {
-        $this->globalTags[$key] = $value;
-        return $this;
-    }
+	/**
+	 * Removes tag.
+	 *
+	 * @param string $key
+	 * @return $this
+	 */
+	public function removeTag($key)
+	{
+		if (isset($this->tags[$key])) {
+			unset($this->tags[$key]);
+		}
+		return $this;
+	}
 
-    /**
-     * @param string $key
-     * @return Collector
-     */
-    public function removeGlobalTag($key)
-    {
-        if (isset($this->globalTags[$key])) {
-            unset($this->globalTags[$key]);
-        }
-        return $this;
-    }
+	/**
+	 * Returns buffer.
+	 *
+	 * @return BufferInterface
+	 */
+	public function getBuffer()
+	{
+		return $this->buffer;
+	}
 
-    /**
-     * @return bool
-     */
-    public function isWriteSilent()
-    {
-        return $this->silentOnWrite;
-    }
+	/**
+	 * Sets buffer.
+	 *
+	 * @param BufferInterface $buffer
+	 * @return $this
+	 */
+	public function setBuffer(BufferInterface $buffer)
+	{
+		$this->buffer = $buffer;
+		return $this;
+	}
 
-    /**
-     * @param bool $value
-     * @return Collector
-     */
-    public function setWriteSilent($value)
-    {
-        $this->silentOnWrite = (bool)$value;
-        return $this;
-    }
+	/**
+	 * Sets handler to buffer.
+	 *
+	 * @param HandlerInterface $handler
+	 * @return $this
+	 */
+	public function setHandler(HandlerInterface $handler)
+	{
+		$this->buffer->setHandler($handler);
+		return $this;
+	}
 
-    /**
-     * @return bool
-     */
-    public function isFlushOnShutdown()
-    {
-        return $this->flushOnShutdown;
-    }
+	/**
+	 * Adds metric into the buffer
+	 *
+	 * @param Metric $metric
+	 * @return $this
+	 */
+	public function buffer(Metric $metric)
+	{
+		try {
+			$this->buffer->add($metric);
+		} catch (\Exception $e) {
+			// @codeCoverageIgnoreStart
+			if ($this->logger) {
+				$this->logger->error('Unable to save metric into the buffer', [
+					'exception' => $e,
+					'metric' => $metric,
+				]);
+			}
+			// @codeCoverageIgnoreEnd
+		}
+		return $this;
+	}
 
-    /**
-     * @param $value
-     * @return Collector
-     */
-    public function setFlushOnShutdown($value)
-    {
-        $this->flushOnShutdown = (bool)$value;
-        if ($this->flushOnShutdown) {
-            if (!$this->shutdownRegistered) {
-                register_shutdown_function(array($this, 'flush'));
-                $this->shutdownRegistered = true;
+	/**
+	 * Adds batch of metrics into the buffer
+	 *
+	 * @param Metric[] $metrics
+	 * @return $this
+	 */
+	public function bufferBatch(array $metrics)
+	{
+		if (empty($metrics)) {
+			return $this;
+		}
+
+		try {
+			$this->buffer->addBatch($metrics);
+		} catch (\Exception $e) {
+			// @codeCoverageIgnoreStart
+			if ($this->logger) {
+				$this->logger->error('Unable to save metric into the buffer', [
+					'exception' => $e,
+					'batch_size' => count($metrics),
+				]);
+			}
+			// @codeCoverageIgnoreEnd
+		}
+		return $this;
+	}
+
+	/**
+	 * Increments one or more metrics to value points.
+	 *
+	 * @param string|array $names
+	 * @param int          $value
+	 * @param float        $sampleRate
+	 * @return $this
+	 */
+	public function increment($names, $value = 1, $sampleRate = 1.0)
+	{
+		return $this->counter($names, $value, $sampleRate);
+	}
+
+	/**
+	 * Decrements one or more metrics to value points.
+	 *
+	 * @param string|array $names
+	 * @param int          $value
+	 * @param float        $sampleRate
+	 * @return $this
+	 */
+	public function decrement($names, $value = 1, $sampleRate = 1.0)
+	{
+		return $this->counter($names, ($value < 0 ? $value : -$value), $sampleRate);
+	}
+
+	/**
+	 * Counts one or more metrics.
+	 *
+	 * @param string|array $names
+	 * @param mixed        $value
+	 * @param float        $sampleRate
+	 * @return $this
+	 */
+	public function counter($names, $value, $sampleRate = 1.0)
+	{
+        $metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\CounterMetric', $names, $value, $sampleRate);
+        return $this->bufferBatch($metrics);
+	}
+
+	/**
+	 * Counts one or more metrics.
+	 * It is recommended to use number of milliseconds as value!
+	 *
+	 * @param string|array $names
+	 * @param int          $value
+     * @param float        $sampleRate
+	 * @return $this
+	 */
+	public function timer($names, $value, $sampleRate = 1.0)
+	{
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\TimerMetric', $names, $value, $sampleRate);
+		return $this->bufferBatch($metrics);
+	}
+
+	/**
+	 * Counts one or more metrics.
+	 * It is recommended to use number of bytes as value!
+	 *
+	 * @param string|array $names
+	 * @param int          $value
+     * @param float        $sampleRate
+	 * @return $this
+	 */
+	public function memory($names, $value, $sampleRate = 1.0)
+	{
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\MemoryMetric', $names, $value, $sampleRate);
+		return $this->bufferBatch($metrics);
+	}
+
+	/**
+	 * Counts one or more metrics.
+	 *
+	 * @param string|array $names
+	 * @param int          $value
+	 * @return $this
+	 */
+	public function gauge($names, $value)
+	{
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\GaugeMetric', $names, $value);
+		return $this->bufferBatch($metrics);
+	}
+
+	/**
+	 * Counts one or more metrics.
+	 *
+	 * @param string|array $names
+	 * @param mixed        $value
+	 * @return $this
+	 */
+	public function unique($names, $value)
+	{
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\UniqueMetric', $names, $value);
+		return $this->bufferBatch($metrics);
+	}
+
+	/**
+	 * @param string       $className
+	 * @param string|array $names
+	 * @param mixed        $value
+     * @param float        $sampleRate
+	 * @return array
+	 */
+	protected function createMetrics($className, $names, $value, $sampleRate = 1.0)
+	{
+		$metrics = [];
+		foreach ((array)$names as $name) {
+			$metric = new $className($this->metricPrefix.$name, $value, $this->tags);
+            if (1.0 != $sampleRate && $metric instanceof SamplingMetricInterface) {
+                $metric->setSampleRate($sampleRate);
             }
-        }
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @param int $value
-     * @param array $tags
-     * @param float $sampleRate
-     * @return Collector
-     */
-    public function increment($name, $value = 1, array $tags = [], $sampleRate = 1.0)
-    {
-        return $this->count($name, $value, $tags, $sampleRate);
-    }
-
-    /**
-     * @param string $name
-     * @param int $value
-     * @param array $tags
-     * @param float $sampleRate
-     * @return Collector
-     */
-    public function decrement($name, $value = 1, array $tags = [], $sampleRate = 1.0)
-    {
-        return $this->count($name, -$value, $tags, $sampleRate);
-    }
-
-    /**
-     * @param string $name
-     * @param int $value
-     * @param array $tags
-     * @param float $sampleRate
-     * @throws \Exception
-     * @return Collector
-     */
-    public function count($name, $value, array $tags = [], $sampleRate = 1.0)
-    {
-        $metric = new Metric($name, $value, Metric::TYPE_COUNT, $this->globalTags);
-        $metric->setSampleRate($sampleRate)->addTags($tags);
-
-        $this->handle($metric);
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @param int|float $value
-     * @param array $tags
-     * @throws \Exception
-     * @return Collector
-     */
-    public function time($name, $value, array $tags = [])
-    {
-        $metric = new Metric($name, $value, Metric::TYPE_TIME, $this->globalTags);
-        $metric->addTags($tags);
-
-        $this->handle($metric);
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return Collector
-     */
-    public function startTimer($name)
-    {
-        // milliseconds
-        $this->timers[$name] = microtime(true) * 1000;
-        return $this;
-    }
-
-    /**
-     * Stops timer and returns spent time is milliseconds
-     *
-     * @param string $name
-     * @return int
-     */
-    public function stopTimer($name)
-    {
-        if (!isset($this->timers[$name])) {
-            return 0;
-        }
-        $time = (microtime(true) * 1000) - $this->timers[$name];
-        unset($this->timers[$name]);
-        return (int)($time);
-    }
-
-    /**
-     * @param string $name
-     * @param array $tags
-     * @return Collector
-     */
-    public function reportTimer($name, array $tags = [])
-    {
-        return $this->time($name, $this->stopTimer($name), $tags);
-    }
-
-    /**
-     * @param string $name
-     * @param int $value
-     * @param array $tags
-     * @return Collector
-     * @throws \Exception
-     */
-    public function gauge($name, $value, array $tags = [])
-    {
-        $metric = new Metric($name, $value, Metric::TYPE_GAUGE, $this->globalTags);
-        $metric->addTags($tags);
-
-        $this->handle($metric);
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed $value
-     * @param array $tags
-     * @return Collector
-     * @throws \Exception
-     */
-    public function set($name, $value, array $tags = [])
-    {
-        $metric = new Metric($name, $value, Metric::TYPE_SET, $this->globalTags);
-        $metric->addTags($tags);
-
-        $this->handle($metric);
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @return Collector
-     */
-    public function startMemory($name)
-    {
-        $this->memory[$name] = memory_get_usage(true);
-        return $this;
-    }
-
-    /**
-     * Stops memory tracker and returns memory difference in bytes
-     *
-     * @param string $name
-     * @return int
-     */
-    public function stopMemory($name)
-    {
-        if (!isset($this->memory[$name])) {
-            return 0;
-        }
-        $memory = memory_get_usage(true) - $this->memory[$name];
-        unset($this->memory[$name]);
-        return $memory;
-    }
-
-    /**
-     * @param string $name
-     * @param array $tags
-     * @return Collector
-     */
-    public function reportMemory($name, array $tags = [])
-    {
-        return $this->count($name, $this->stopMemory($name), $tags);
-    }
-
-    /**
-     * @param Metric $metric
-     * @throws \Exception
-     */
-    protected function handle(Metric $metric)
-    {
-        if ($this->flushOnShutdown) {
-            $metric->setTime(microtime(true)/*, Metric::PRECISION_MICROSECONDS*/);
-            $this->metrics[] = $metric;
-        } else {
-            try {
-                $this->handler->handle($metric);
-            } catch (\Exception $e) {
-                if (!$this->silentOnWrite) {
-                    throw $e;
-                }
-            }
-        }
-    }
-
-    /**
-     * @return Collector
-     * @throws \Exception
-     */
-    public function flush()
-    {
-        if (empty($this->metrics)) {
-            return $this;
-        }
-        try {
-            $this->handler->handleBatch($this->metrics);
-        } catch (\Exception $e) {
-            if (!$this->silentOnWrite) {
-                throw $e;
-            }
-        }
-        return $this;
-    }
+			$metrics[] = $metric;
+		}
+		return $metrics;
+	}
 }

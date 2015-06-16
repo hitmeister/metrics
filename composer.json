@@ -2,7 +2,7 @@
 {
   "name": "hitmeister/metrics",
   "description": "Metrics forwarder for PHP.",
-  "version": "1.0.1",
+  "version": "2.0.0-dev",
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
@@ -15,11 +15,9 @@
   "keywords": [
     "metrics",
     "monitoring",
-    "statsd",
-    "influxdb",
-    "librato",
-    "graphite",
-    "udp"
+	"counter",
+	"timer",
+	"gauge"
   ],
   "homepage": "https://www.hitmeister.de/",
   "support": {
@@ -29,8 +27,8 @@
   },
   "require": {
     "php": ">=5.5",
-    "clue/socket-raw": "~1.2",
-	"guzzlehttp/guzzle": "~6.0"
+	"psr/log": "~1.0",
+    "clue/socket-raw": "~1.2"
   },
   "require-dev": {
     "phpunit/phpunit": "~4.7",
@@ -41,6 +39,12 @@
   "autoload": {
     "psr-4": {
       "Hitmeister\\Component\\Metrics\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Hitmeister\\Component\\Metrics\\Tests\\": "tests/Metrics/",
+      "Hitmeister\\Component\\Metrics\\Benchmarks\\": "benchmarks/Metrics/"
     }
   }
 }

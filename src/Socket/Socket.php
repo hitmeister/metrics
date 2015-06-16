@@ -7,7 +7,7 @@
 
 namespace Hitmeister\Component\Metrics\Socket;
 
-use Hitmeister\Component\Metrics\Exception;
+use Socket\Raw\Exception;
 use Socket\Raw\Socket as RawSocket;
 
 class Socket extends RawSocket
@@ -24,11 +24,7 @@ class Socket extends RawSocket
         $length = strlen($buffer);
 
         while (true) {
-            try {
-                $sent = parent::write($buffer);
-            } catch (\Exception $e) {
-                throw new Exception($e->getMessage(), $e->getCode());
-            }
+	        $sent = parent::write($buffer);
             $totalSent += $sent;
 
             // Check if the entire message has been sent

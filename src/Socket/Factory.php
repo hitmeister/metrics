@@ -7,7 +7,7 @@
 
 namespace Hitmeister\Component\Metrics\Socket;
 
-use Hitmeister\Component\Metrics\Exception;
+use Socket\Raw\Exception;
 use Socket\Raw\Factory as BaseFactory;
 
 class Factory extends BaseFactory
@@ -23,9 +23,7 @@ class Factory extends BaseFactory
     {
         $sock = @socket_create($domain, $type, $protocol);
         if ($sock === false) {
-            $code = socket_last_error();
-            socket_clear_error();
-            throw new Exception('Unable to create the socket: '.socket_strerror($code));
+	        throw Exception::createFromGlobalSocketOperation('Unable to create socket');
         }
         return new Socket($sock);
     }

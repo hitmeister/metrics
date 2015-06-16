@@ -2,8 +2,8 @@
 
 <phpunit bootstrap="./tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Metrics Test Suite">
-            <directory suffix="Test.php">./src/Tests/</directory>
+        <testsuite name="Hitmeister.de Metrics Test Suite">
+            <directory suffix="Test.php">./tests/Metrics/</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -11,9 +11,6 @@
             <directory>./src/</directory>
             <exclude>
                 <directory>./src/Socket</directory>
-                <directory>./src/Tests</directory>
-                <directory>./src/Benchmarks</directory>
-                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>
