@@ -13,7 +13,7 @@ namespace Hitmeister\Component\Metrics\Metric;
  *
  * @package Hitmeister\Component\Metrics\Metric
  */
-class GaugeMetric extends AbstractMetric
+class GaugeMetric extends Metric
 {
 	/**
 	 * @inheritdoc

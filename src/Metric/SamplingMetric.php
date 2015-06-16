@@ -13,7 +13,7 @@ namespace Hitmeister\Component\Metrics\Metric;
  *
  * @package Hitmeister\Component\Metrics\Metric
  */
-abstract class SamplingMetric extends AbstractMetric implements SamplingMetricInterface
+abstract class SamplingMetric extends Metric implements SamplingMetricInterface
 {
     /**
      * @var float

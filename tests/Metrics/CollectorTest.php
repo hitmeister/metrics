@@ -10,7 +10,7 @@ namespace Hitmeister\Component\Metrics\Tests;
 use Hitmeister\Component\Metrics\Buffer\BufferInterface;
 use Hitmeister\Component\Metrics\Collector;
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
-use Hitmeister\Component\Metrics\Metric\AbstractMetric;
+use Hitmeister\Component\Metrics\Metric\Metric;
 use Hitmeister\Component\Metrics\Metric\CounterMetric;
 use Hitmeister\Component\Metrics\Metric\GaugeMetric;
 use Hitmeister\Component\Metrics\Metric\MemoryMetric;
@@ -241,10 +241,10 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @return m\MockInterface|AbstractMetric
+	 * @return m\MockInterface|Metric
 	 */
 	protected function mockMetric()
 	{
-		return m::mock('\Hitmeister\Component\Metrics\Metric\AbstractMetric');
+		return m::mock('\Hitmeister\Component\Metrics\Metric\Metric');
 	}
 }

@@ -15,7 +15,7 @@ namespace Hitmeister\Component\Metrics\Metric;
  *
  * @package Hitmeister\Component\Metrics\Metric
  */
-class MemoryMetric extends AbstractMetric
+class MemoryMetric extends Metric
 {
 	/**
 	 * @inheritdoc

@@ -7,18 +7,18 @@
 
 namespace Hitmeister\Component\Metrics\Handler;
 
-use Hitmeister\Component\Metrics\Metric\AbstractMetric;
+use Hitmeister\Component\Metrics\Metric\Metric;
 
 interface HandlerInterface
 {
     /**
-     * @param AbstractMetric $metric
+     * @param Metric $metric
      * @return bool
      */
-    public function handle(AbstractMetric $metric);
+    public function handle(Metric $metric);
 
     /**
-     * @param AbstractMetric[] $metrics
+     * @param Metric[] $metrics
      * @return bool
      */
     public function handleBatch(array $metrics);

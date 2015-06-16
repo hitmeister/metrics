@@ -9,7 +9,7 @@
 namespace Hitmeister\Component\Metrics\Buffer;
 
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
-use Hitmeister\Component\Metrics\Metric\AbstractMetric;
+use Hitmeister\Component\Metrics\Metric\Metric;
 
 interface BufferInterface
 {
@@ -24,15 +24,15 @@ interface BufferInterface
 	/**
 	 * Adds one metric to buffer.
 	 *
-	 * @param AbstractMetric $metric
+	 * @param Metric $metric
 	 * @return bool
 	 */
-	public function add(AbstractMetric $metric);
+	public function add(Metric $metric);
 
 	/**
 	 * Adds batch of metrics to buffer.
 	 *
-	 * @param AbstractMetric[] $metrics
+	 * @param Metric[] $metrics
 	 * @return bool
 	 */
 	public function addBatch(array $metrics);
@@ -40,7 +40,7 @@ interface BufferInterface
 	/**
 	 * Returns batch of metrics.
 	 *
-	 * @return AbstractMetric[]
+	 * @return Metric[]
 	 */
 	public function getData();
 

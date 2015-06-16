@@ -13,7 +13,7 @@ namespace Hitmeister\Component\Metrics\Metric;
  *
  * @package Hitmeister\Component\Metrics\Metric
  */
-class UniqueMetric extends AbstractMetric
+class UniqueMetric extends Metric
 {
 	/**
 	 * @inheritdoc

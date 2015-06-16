@@ -10,7 +10,7 @@ namespace Hitmeister\Component\Metrics\Metric;
 
 use Hitmeister\Component\Metrics\Helper;
 
-abstract class AbstractMetric
+abstract class Metric
 {
 	/**
 	 * Metric name.
