@@ -94,5 +94,8 @@ abstract class MetricTestCase extends \PHPUnit_Framework_TestCase
 		$this->assertCount(0, $metric->getTags());
 		$metric->setTags(['env' => 'prod']);
 		$this->assertArrayHasKey('env', $metric->getTags());
+		$metric->addTags(['server' => 'web01']);
+		$this->assertArrayHasKey('env', $metric->getTags());
+		$this->assertArrayHasKey('server', $metric->getTags());
 	}
 }

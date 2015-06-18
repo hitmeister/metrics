@@ -10,6 +10,7 @@ namespace Hitmeister\Component\Metrics;
 use Hitmeister\Component\Metrics\Buffer\BufferInterface;
 use Hitmeister\Component\Metrics\Buffer\ImmediateBuffer;
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
+use Hitmeister\Component\Metrics\Metric\Metric;
 use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
 
 class Collector
@@ -164,12 +165,13 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param int          $value
+	 * @param array        $tags
 	 * @param float        $sampleRate
 	 * @return $this
 	 */
-	public function increment($names, $value = 1, $sampleRate = 1.0)
+	public function increment($names, $value = 1, array $tags = [], $sampleRate = 1.0)
 	{
-		return $this->counter($names, $value, $sampleRate);
+		return $this->counter($names, $value, $tags, $sampleRate);
 	}
 
 	/**
@@ -177,12 +179,13 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param int          $value
+	 * @param array        $tags
 	 * @param float        $sampleRate
 	 * @return $this
 	 */
-	public function decrement($names, $value = 1, $sampleRate = 1.0)
+	public function decrement($names, $value = 1, array $tags = [], $sampleRate = 1.0)
 	{
-		return $this->counter($names, ($value < 0 ? $value : -$value), $sampleRate);
+		return $this->counter($names, ($value < 0 ? $value : -$value), $tags, $sampleRate);
 	}
 
 	/**
@@ -190,12 +193,13 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param mixed        $value
+	 * @param array        $tags
 	 * @param float        $sampleRate
 	 * @return $this
 	 */
-	public function counter($names, $value, $sampleRate = 1.0)
+	public function counter($names, $value, array $tags = [], $sampleRate = 1.0)
 	{
-        $metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\CounterMetric', $names, $value, $sampleRate);
+        $metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\CounterMetric', $names, $value, $tags, $sampleRate);
 		$this->buffer->addBatch($metrics);
         return $this;
 	}
@@ -206,12 +210,13 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param int          $value
+	 * @param array        $tags
      * @param float        $sampleRate
 	 * @return $this
 	 */
-	public function timer($names, $value, $sampleRate = 1.0)
+	public function timer($names, $value, array $tags = [], $sampleRate = 1.0)
 	{
-		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\TimerMetric', $names, $value, $sampleRate);
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\TimerMetric', $names, $value, $tags, $sampleRate);
 		$this->buffer->addBatch($metrics);
 		return $this;
 	}
@@ -222,12 +227,13 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param int          $value
+	 * @param array        $tags
      * @param float        $sampleRate
 	 * @return $this
 	 */
-	public function memory($names, $value, $sampleRate = 1.0)
+	public function memory($names, $value, array $tags = [], $sampleRate = 1.0)
 	{
-		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\MemoryMetric', $names, $value, $sampleRate);
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\MemoryMetric', $names, $value, $tags, $sampleRate);
 		$this->buffer->addBatch($metrics);
 		return $this;
 	}
@@ -237,11 +243,12 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param int          $value
+	 * @param array        $tags
 	 * @return $this
 	 */
-	public function gauge($names, $value)
+	public function gauge($names, $value, array $tags = [])
 	{
-		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\GaugeMetric', $names, $value);
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\GaugeMetric', $names, $value, $tags);
 		$this->buffer->addBatch($metrics);
 		return $this;
 	}
@@ -251,11 +258,12 @@ class Collector
 	 *
 	 * @param string|array $names
 	 * @param mixed        $value
+	 * @param array        $tags
 	 * @return $this
 	 */
-	public function unique($names, $value)
+	public function unique($names, $value, array $tags = [])
 	{
-		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\UniqueMetric', $names, $value);
+		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\UniqueMetric', $names, $value, $tags);
 		$this->buffer->addBatch($metrics);
 		return $this;
 	}
@@ -264,14 +272,19 @@ class Collector
 	 * @param string       $className
 	 * @param string|array $names
 	 * @param mixed        $value
+	 * @param array        $tags
      * @param float        $sampleRate
 	 * @return array
 	 */
-	protected function createMetrics($className, $names, $value, $sampleRate = 1.0)
+	protected function createMetrics($className, &$names, &$value, array &$tags = [], &$sampleRate = 1.0)
 	{
 		$metrics = [];
 		foreach ((array)$names as $name) {
+			/** @var Metric|SamplingMetricInterface $metric */
 			$metric = new $className($this->metricPrefix.$name, $value, $this->tags);
+			if (!empty($tags)) {
+				$metric->addTags($tags);
+			}
             if (1.0 != $sampleRate && $metric instanceof SamplingMetricInterface) {
                 $metric->setSampleRate($sampleRate);
             }

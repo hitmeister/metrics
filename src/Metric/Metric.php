@@ -177,4 +177,16 @@ abstract class Metric
 		$this->tags = $tags;
 		return $this;
 	}
+
+	/**
+	 * Adds tags
+	 *
+	 * @param array $tags
+	 * @return $this
+	 */
+	public function addTags(array $tags)
+	{
+		$this->tags = array_merge($this->tags, $tags);
+		return $this;
+	}
 }

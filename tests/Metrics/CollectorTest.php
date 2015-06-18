@@ -186,7 +186,21 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 
 		$collector = new Collector();
 		$collector->setBuffer($mockBuffer);
-		$collector->$function($names, 10, 0.2);
+		$collector->$function($names, 10, [], 0.2);
+	}
+
+	/**
+	 * Tests additional tags for metrics
+	 */
+	public function testAdditionalTags()
+	{
+		/** @var m\MockInterface|BufferInterface $mockBuffer */
+		$mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
+		$mockBuffer->shouldReceive('addBatch')->andReturn(true)->once();
+
+		$collector = new Collector();
+		$collector->setBuffer($mockBuffer);
+		$collector->counter('metric_name', 10, ['method' => 'GetMe']);
 	}
 
 	/**
