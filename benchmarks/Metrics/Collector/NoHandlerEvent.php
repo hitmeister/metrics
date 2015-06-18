@@ -40,14 +40,14 @@ class NoHandlerEvent extends AthleticEvent
         $this->collectorBase = new Collector();
 
         $this->collectorPrefix = new Collector();
-        $this->collectorPrefix->setMetricPrefix('prefix_');
+        $this->collectorPrefix->setPrefix('prefix_');
 
         $this->collectorTags = new Collector();
         $this->collectorTags->setTags(['env' => 'prod', 'server' => 'web01']);
 
         $this->collectorTagsPrefix = new Collector();
         $this->collectorTagsPrefix->setTags(['env' => 'prod', 'server' => 'web01']);
-        $this->collectorTagsPrefix->setMetricPrefix('prefix_');
+        $this->collectorTagsPrefix->setPrefix('prefix_');
     }
 
     /**

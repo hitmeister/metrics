@@ -46,7 +46,7 @@ class StatsDaemonShutdownEvent extends AthleticEvent
         $this->collectorPrefix = new Collector();
         $this->collectorPrefix->setBuffer(new OnShutdownBuffer());
         $this->collectorPrefix->setHandler(new StatsDaemonHandler());
-        $this->collectorPrefix->setMetricPrefix('prefix_');
+        $this->collectorPrefix->setPrefix('prefix_');
 
         $this->collectorTags = new Collector();
         $this->collectorTags->setBuffer(new OnShutdownBuffer());
@@ -57,7 +57,7 @@ class StatsDaemonShutdownEvent extends AthleticEvent
         $this->collectorTagsPrefix->setBuffer(new OnShutdownBuffer());
         $this->collectorTagsPrefix->setHandler(new StatsDaemonHandler());
         $this->collectorTagsPrefix->setTags(['env' => 'prod', 'server' => 'web01']);
-        $this->collectorTagsPrefix->setMetricPrefix('prefix_');
+        $this->collectorTagsPrefix->setPrefix('prefix_');
     }
 
     /**

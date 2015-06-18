@@ -12,11 +12,6 @@ use Hitmeister\Component\Metrics\Collector;
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
 use Hitmeister\Component\Metrics\Metric\Metric;
 use Hitmeister\Component\Metrics\Metric\CounterMetric;
-use Hitmeister\Component\Metrics\Metric\GaugeMetric;
-use Hitmeister\Component\Metrics\Metric\MemoryMetric;
-use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
-use Hitmeister\Component\Metrics\Metric\TimerMetric;
-use Hitmeister\Component\Metrics\Metric\UniqueMetric;
 use Mockery as m;
 
 class CollectorTest extends \PHPUnit_Framework_TestCase
@@ -38,9 +33,9 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 		$collector = new Collector();
 
 		// Set get prefix
-		$this->assertEquals('', $collector->getMetricPrefix());
-		$collector->setMetricPrefix('prefix_');
-		$this->assertEquals('prefix_', $collector->getMetricPrefix());
+		$this->assertEquals('', $collector->getPrefix());
+		$collector->setPrefix('prefix_');
+		$this->assertEquals('prefix_', $collector->getPrefix());
 
 		// Set get tags
 		$this->assertFalse($collector->hasTags());
@@ -90,30 +85,49 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function counterDataProvider()
 	{
-		return [['counter'], ['increment'], ['decrement']];
+		return [['increment'], ['decrement']];
 	}
 
-	/**
-	 * Tests counter functions
-	 *
-	 * @param string $function
-	 * @dataProvider counterDataProvider
-	 */
-	public function testCounter($function)
-	{
-		/** @var m\MockInterface|BufferInterface $mockBuffer */
-		$mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
-		$mockBuffer->shouldReceive('addBatch')->with(m::on(function($metrics){
-			if (count($metrics) == 1 && $metrics[0] instanceof CounterMetric) {
-				return true;
-			}
-			return false;
-		}))->andReturn(true)->once();
+    /**
+     * Tests counter functions
+     *
+     * @param string $function
+     * @dataProvider counterDataProvider
+     */
+    public function testIncDec($function)
+    {
+        /** @var m\MockInterface|BufferInterface $mockBuffer */
+        $mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
+        $mockBuffer->shouldReceive('addBatch')->with(m::on(function($metrics){
+            if (count($metrics) == 1 && $metrics[0] instanceof CounterMetric) {
+                return true;
+            }
+            return false;
+        }))->andReturn(true)->once();
 
-		$collector = new Collector();
-		$collector->setBuffer($mockBuffer);
-		$collector->$function('metric_name', 10);
-	}
+        $collector = new Collector();
+        $collector->setBuffer($mockBuffer);
+        $collector->$function('metric_name');
+    }
+
+    /**
+     * Tests counter functions
+     */
+    public function testCounter()
+    {
+        /** @var m\MockInterface|BufferInterface $mockBuffer */
+        $mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
+        $mockBuffer->shouldReceive('addBatch')->with(m::on(function($metrics){
+            if (count($metrics) == 1 && $metrics[0] instanceof CounterMetric) {
+                return true;
+            }
+            return false;
+        }))->andReturn(true)->once();
+
+        $collector = new Collector();
+        $collector->setBuffer($mockBuffer);
+        $collector->counter('metric_name', 10);
+    }
 
 	/**
 	 * Tests counter batch functions
@@ -136,7 +150,7 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 
 		$collector = new Collector();
 		$collector->setBuffer($mockBuffer);
-		$collector->$function(['metric_name1', 'metric_name2'], 10);
+		$collector->$function(['metric_name1', 'metric_name2']);
 	}
 
 	/**

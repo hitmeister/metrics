@@ -43,7 +43,7 @@ class StatsDaemonImmediateEvent extends AthleticEvent
 
         $this->collectorPrefix = new Collector();
         $this->collectorPrefix->setHandler(new StatsDaemonHandler());
-        $this->collectorPrefix->setMetricPrefix('prefix_');
+        $this->collectorPrefix->setPrefix('prefix_');
 
         $this->collectorTags = new Collector();
         $this->collectorTags->setHandler(new StatsDaemonHandler());
@@ -52,7 +52,7 @@ class StatsDaemonImmediateEvent extends AthleticEvent
         $this->collectorTagsPrefix = new Collector();
         $this->collectorTagsPrefix->setHandler(new StatsDaemonHandler());
         $this->collectorTagsPrefix->setTags(['env' => 'prod', 'server' => 'web01']);
-        $this->collectorTagsPrefix->setMetricPrefix('prefix_');
+        $this->collectorTagsPrefix->setPrefix('prefix_');
     }
 
     /**
