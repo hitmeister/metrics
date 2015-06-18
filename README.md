@@ -9,6 +9,30 @@ Metrics forwarder for PHP.
 ## Some benchmarks
 
 ```
+Hitmeister\Component\Metrics\Benchmarks\Collector\InfluxUdpImmediateEvent
+    Method Name                       Iterations    Average Time      Ops/second
+    -------------------------------  ------------  --------------    -------------
+    counterName                    : [1,000     ] [0.0002313616276] [4,322.23792]
+    counterNameMultiValue          : [1,000     ] [0.0000676133633] [14,789.97570]
+    counterPrefixName              : [1,000     ] [0.0000578238964] [17,293.88820]
+    counterPrefixNameMultiValue    : [1,000     ] [0.0000662095547] [15,103.56028]
+    counterTagsName                : [1,000     ] [0.0000726783276] [13,759.25993]
+    counterTagsNameMultiValue      : [1,000     ] [0.0000773749352] [12,924.08191]
+    counterTagsNamePrefix          : [1,000     ] [0.0000779783726] [12,824.06861]
+    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000772831440] [12,939.43217]
+
+Hitmeister\Component\Metrics\Benchmarks\Collector\InfluxUdpShutdownEvent
+    Method Name                       Iterations    Average Time      Ops/second
+    -------------------------------  ------------  --------------    -------------
+    counterName                    : [1,000     ] [0.0000207498074] [48,193.21851]
+    counterNameMultiValue          : [1,000     ] [0.0000219464302] [45,565.49701]
+    counterPrefixName              : [1,000     ] [0.0000201663971] [49,587.43970]
+    counterPrefixNameMultiValue    : [1,000     ] [0.0000193657875] [51,637.45599]
+    counterTagsName                : [1,000     ] [0.0000242691040] [41,204.65262]
+    counterTagsNameMultiValue      : [1,000     ] [0.0000208075047] [48,059.58315]
+    counterTagsNamePrefix          : [1,000     ] [0.0000179619789] [55,673.15299]
+    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000188963413] [52,920.29726]
+
 Hitmeister\Component\Metrics\Benchmarks\Collector\NoHandlerEvent
     Method Name                       Iterations    Average Time      Ops/second
     -------------------------------  ------------  --------------    -------------
