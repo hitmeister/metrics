@@ -7,6 +7,7 @@
 
 namespace Hitmeister\Component\Metrics\Handler;
 
+use Hitmeister\Component\Metrics\Formatter\FormatterInterface;
 use Hitmeister\Component\Metrics\Metric\Metric;
 
 interface HandlerInterface
@@ -22,4 +23,11 @@ interface HandlerInterface
      * @return bool
      */
     public function handleBatch(array $metrics);
+
+	/**
+	 * Sets formatter
+	 *
+	 * @param FormatterInterface $formatter
+	 */
+	public function setFormatter(FormatterInterface $formatter);
 }

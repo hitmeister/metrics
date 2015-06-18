@@ -11,37 +11,10 @@ use Hitmeister\Component\Metrics\Formatter\StatsDaemonFormatter;
 use Hitmeister\Component\Metrics\Handler\StatsDaemonHandler;
 use Hitmeister\Component\Metrics\Metric\CounterMetric;
 use Hitmeister\Component\Metrics\Metric\DummyMetric;
-use Hitmeister\Component\Metrics\Socket\Factory;
-use Hitmeister\Component\Metrics\Socket\Socket;
 use Mockery as m;
 
-class StatsDaemonHandlerTest extends \PHPUnit_Framework_TestCase
+class StatsDaemonHandlerTest extends SocketHandlerTestCase
 {
-    /**
-     * @var Socket|m\MockInterface
-     */
-    private $mockSocket;
-
-    /**
-     * @var Factory|m\MockInterface
-     */
-    private $mockFactory;
-
-    /**
-     * @var string
-     */
-    private $testHost = '127.0.0.1';
-
-    /**
-     * @var int
-     */
-    private $testPort = 8125;
-
-    /**
-     * @var int
-     */
-    private $testTimeout = 10;
-
     /**
      * @var StatsDaemonFormatter
      */
@@ -53,33 +26,6 @@ class StatsDaemonHandlerTest extends \PHPUnit_Framework_TestCase
     public static function setUpBeforeClass()
     {
         self::$formatter = new StatsDaemonFormatter();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->mockSocket = m::mock('\Hitmeister\Component\Metrics\Socket\Socket');
-        $this->mockSocket->shouldReceive('close')->once();
-        $this->mockSocket->shouldReceive('connectTimeout')->withArgs([$this->testHost.':'.$this->testPort, $this->testTimeout])->once();
-
-        $this->mockFactory = m::mock('\Hitmeister\Component\Metrics\Socket\Factory');
-        $this->mockFactory->shouldReceive('createUdp4')->andReturn($this->mockSocket);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function tearDown()
-    {
-        $this->mockSocket = null;
-        $this->mockFactory = null;
-
-        m::close();
-        parent::tearDown();
     }
 
     /**
