@@ -29,15 +29,16 @@
     "issues": "https://github.com/hitmeister/metrics/issues"
   },
   "require": {
+    "clue/socket-raw": "~1.2",
     "php": ">=5.5",
 	"psr/log": "~1.0",
-    "clue/socket-raw": "~1.2"
+    "symfony/stopwatch": "~2.7"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.7",
-    "satooshi/php-coveralls": "dev-master",
+    "athletic/athletic": "~0.1",
     "mockery/mockery": "~0.9",
-    "athletic/athletic": "~0.1"
+    "phpunit/phpunit": "~4.7",
+    "satooshi/php-coveralls": "dev-master"
   },
   "autoload": {
     "psr-4": {

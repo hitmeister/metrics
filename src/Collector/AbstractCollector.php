@@ -10,6 +10,7 @@ namespace Hitmeister\Component\Metrics\Collector;
 use Hitmeister\Component\Metrics\Buffer\BufferInterface;
 use Hitmeister\Component\Metrics\Metric\Metric;
 use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 abstract class AbstractCollector implements CollectorInterface
 {
@@ -108,6 +109,42 @@ abstract class AbstractCollector implements CollectorInterface
         $className = '\Hitmeister\Component\Metrics\Metric\UniqueMetric';
         $metrics = $this->createMetrics($className, $names, $value, $tags);
         $this->buffer->addBatch($metrics);
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function closure($name, $function, array $tags = [], $sampleRate = 1.0)
+    {
+        if (!is_callable($function)) {
+            throw new \LogicException('$function argument is not callable');
+        }
+
+        // Event happened once
+        $this->increment($name, $tags, 1, $sampleRate);
+
+        // Start trackers
+        $stopwatch = new Stopwatch();
+        $stopwatch->start($name);
+
+        try {
+            // Run
+            $function();
+        } catch (\Exception $e) {
+            // Track exception
+            $this->increment($name.'_exception', $tags);
+
+            // Do not hide the exception
+            throw $e;
+        } finally {
+            $event = $stopwatch->stop($name);
+
+            // Report
+            $this->timer($name.'_time', $event->getDuration(), $tags, $sampleRate);
+            $this->memory($name.'_memory', $event->getMemory(), $tags, $sampleRate);
+        }
+
         return $this;
     }
 

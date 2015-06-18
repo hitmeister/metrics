@@ -217,6 +217,73 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 		$collector->counter('metric_name', 10, ['method' => 'GetMe']);
 	}
 
+    /**
+     *
+     */
+    public function testClosure()
+    {
+        /** @var m\MockInterface|BufferInterface $mockBuffer */
+        $mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
+        $mockBuffer->shouldReceive('addBatch')->andReturn(true)->times(3);
+
+        $a = null;
+        $collector = new Collector();
+        $collector->setBuffer($mockBuffer);
+        $collector->closure('closure_metric', function() use (&$a) {
+            // Allocate memory
+            $a = str_repeat('string', mt_rand(99999,9999999));
+            // Spend some time
+            usleep(1000);
+        });
+        unset($a);
+    }
+
+    /**
+     *
+     */
+    public function testClosureException()
+    {
+        /** @var m\MockInterface|BufferInterface $mockBuffer */
+        $mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
+        $mockBuffer->shouldReceive('addBatch')->andReturn(true)->times(4);
+
+        $exception = null;
+        $collector = new Collector();
+        $collector->setBuffer($mockBuffer);
+
+        try {
+            $collector->closure('closure_metric', function() {
+                throw new \Exception('testClosureException');
+            });
+        } catch (\Exception $e) {
+            $exception = $e;
+        }
+
+        $this->assertInstanceOf('\Exception', $exception);
+    }
+
+    /**
+     *
+     */
+    public function testClosureError()
+    {
+        /** @var m\MockInterface|BufferInterface $mockBuffer */
+        $mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
+        $mockBuffer->shouldNotReceive('addBatch');
+
+        $exception = null;
+        $collector = new Collector();
+        $collector->setBuffer($mockBuffer);
+
+        try {
+            $collector->closure('closure_metric', 'no_function');
+        } catch (\Exception $e) {
+            $exception = $e;
+        }
+
+        $this->assertInstanceOf('\LogicException', $exception);
+    }
+
 	/**
 	 * @return m\MockInterface|Metric
 	 */

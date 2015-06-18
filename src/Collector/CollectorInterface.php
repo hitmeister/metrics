@@ -85,4 +85,16 @@ interface CollectorInterface
      * @return $this
      */
     public function unique($names, $value, array $tags = []);
+
+    /**
+     * Runs closure and track elapsed time, memory and counts how many time is happens
+     *
+     * @param string   $name
+     * @param callable $function
+     * @param array    $tags
+     * @param float    $sampleRate
+     * @return $this
+     * @throws \Exception
+     */
+    public function closure($name, $function, array $tags = [], $sampleRate = 1.0);
 }
