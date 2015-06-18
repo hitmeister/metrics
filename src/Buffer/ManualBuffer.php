@@ -15,7 +15,23 @@ class ManualBuffer extends Buffer
 	 */
 	public function flush()
 	{
-		$flushed = !$this->handler ? false : $this->handler->handleBatch($this->metrics);
+		$flushed = false;
+
+		if ($this->handler) {
+			try {
+				$flushed = $this->handler->handleBatch($this->metrics);
+			} catch (\Exception $e) {
+				// @codeCoverageIgnoreStart
+				if ($this->logger) {
+					$this->logger->error('An error occurred while flush batch of metrics', [
+						'exception' => $e,
+						'batch_size' => count($this->metrics),
+					]);
+				}
+				// @codeCoverageIgnoreEnd
+			}
+		}
+
 		return $flushed && parent::flush();
 	}
 }

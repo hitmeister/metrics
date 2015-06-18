@@ -17,7 +17,10 @@
     "monitoring",
 	"counter",
 	"timer",
-	"gauge"
+	"gauge",
+	"statsd",
+	"influxdb",
+	"influx"
   ],
   "homepage": "https://www.hitmeister.de/",
   "support": {

@@ -18,7 +18,18 @@ class ImmediateBuffer extends Buffer
 	public function add(Metric $metric)
 	{
 		if ($this->handler) {
-			return $this->handler->handle($metric);
+			try {
+				return $this->handler->handle($metric);
+			} catch (\Exception $e) {
+				// @codeCoverageIgnoreStart
+				if ($this->logger) {
+					$this->logger->error('An error occurred while processing metric', [
+						'exception' => $e,
+						'metric' => $metric,
+					]);
+				}
+				// @codeCoverageIgnoreEnd
+			}
 		}
 		return false;
 	}
@@ -29,7 +40,18 @@ class ImmediateBuffer extends Buffer
 	public function addBatch(array $metrics)
 	{
 		if ($this->handler) {
-			return $this->handler->handleBatch($metrics);
+			try {
+				return $this->handler->handleBatch($metrics);
+			} catch (\Exception $e) {
+				// @codeCoverageIgnoreStart
+				if ($this->logger) {
+					$this->logger->error('An error occurred while processing batch of metrics', [
+						'exception' => $e,
+						'batch_size' => count($metrics),
+					]);
+				}
+				// @codeCoverageIgnoreEnd
+			}
 		}
 		return false;
 	}

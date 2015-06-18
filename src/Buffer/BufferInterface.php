@@ -10,9 +10,25 @@ namespace Hitmeister\Component\Metrics\Buffer;
 
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
 use Hitmeister\Component\Metrics\Metric\Metric;
+use Psr\Log\LoggerInterface;
 
 interface BufferInterface
 {
+	/**
+	 * Returns logger.
+	 * 
+	 * @return LoggerInterface
+	 */
+	public function getLogger();
+
+	/**
+	 * Sets logger.
+	 *
+	 * @param LoggerInterface $logger
+	 * @return $this
+	 */
+	public function setLogger(LoggerInterface $logger);
+
 	/**
 	 * Sets handler.
 	 *

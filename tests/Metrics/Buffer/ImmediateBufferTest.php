@@ -59,6 +59,16 @@ class ImmediateBufferTest extends BufferTestCase
 	}
 
 	/**
+	 * Tests add function with error
+	 */
+	public function testAddException()
+	{
+		$metric = $this->mockMetric();
+		$this->mockHandler->shouldReceive('handle')->withArgs([$metric])->andThrow(new \Exception())->once();
+		$this->assertFalse($this->buffer->add($metric));
+	}
+
+	/**
 	 * Tests addBatch function
 	 */
 	public function testAddBatch()
@@ -83,6 +93,20 @@ class ImmediateBufferTest extends BufferTestCase
 		];
 
 		$this->buffer = new ImmediateBuffer();
+		$this->assertFalse($this->buffer->addBatch($batch));
+	}
+
+	/**
+	 * Tests addBatch function with error
+	 */
+	public function testAddBatchException()
+	{
+		$batch = [
+			$this->mockMetric(),
+			$this->mockMetric(),
+		];
+
+		$this->mockHandler->shouldReceive('handleBatch')->withArgs([$batch])->andThrow(new \Exception())->once();
 		$this->assertFalse($this->buffer->addBatch($batch));
 	}
 }

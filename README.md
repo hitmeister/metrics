@@ -12,43 +12,50 @@ Metrics forwarder for PHP.
 Hitmeister\Component\Metrics\Benchmarks\Collector\NoHandlerEvent
     Method Name                       Iterations    Average Time      Ops/second
     -------------------------------  ------------  --------------    -------------
-    counterName                    : [1,000     ] [0.0000155351162] [64,370.29420]
-    counterNameMultiValue          : [1,000     ] [0.0000202043056] [49,494.40072]
-    counterPrefixName              : [1,000     ] [0.0000157337189] [63,557.76458]
-    counterPrefixNameMultiValue    : [1,000     ] [0.0000157635212] [63,437.60304]
-    counterTagsName                : [1,000     ] [0.0000155723095] [64,216.55056]
-    counterTagsNameMultiValue      : [1,000     ] [0.0000154478550] [64,733.90644]
-    counterTagsNamePrefix          : [1,000     ] [0.0000160977840] [62,120.35131]
-    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000147726536] [67,692.64537]
+    counterName                    : [1,000     ] [0.0000142347813] [70,250.46479]
+    counterNameMultiValue          : [1,000     ] [0.0000161037445] [62,097.35876]
+    counterPrefixName              : [1,000     ] [0.0000175075531] [57,118.20460]
+    counterPrefixNameMultiValue    : [1,000     ] [0.0000142931938] [69,963.36947]
+    counterTagsName                : [1,000     ] [0.0000159406662] [62,732.63536]
+    counterTagsNameMultiValue      : [1,000     ] [0.0000165419579] [60,452.33634]
+    counterTagsNamePrefix          : [1,000     ] [0.0000143866539] [69,508.86613]
+    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000144739151] [69,089.80694]
 
 Hitmeister\Component\Metrics\Benchmarks\Collector\StatsDaemonImmediateEvent
     Method Name                       Iterations    Average Time      Ops/second
     -------------------------------  ------------  --------------    -------------
-    counterName                    : [1,000     ] [0.0002012920380] [4,967.90638]
-    counterNameMultiValue          : [1,000     ] [0.0000223789215] [44,684.90582]
-    counterPrefixName              : [1,000     ] [0.0000449631214] [22,240.44881]
-    counterPrefixNameMultiValue    : [1,000     ] [0.0000221140385] [45,220.14382]
-    counterTagsName                : [1,000     ] [0.0000583240986] [17,145.57146]
-    counterTagsNameMultiValue      : [1,000     ] [0.0000219795704] [45,496.79463]
-    counterTagsNamePrefix          : [1,000     ] [0.0000590469837] [16,935.66609]
-    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000223853588] [44,672.05589]
+    counterName                    : [1,000     ] [0.0002136104107] [4,681.41977]
+    counterNameMultiValue          : [1,000     ] [0.0000218720436] [45,720.46480]
+    counterPrefixName              : [1,000     ] [0.0000505478382] [19,783.23971]
+    counterPrefixNameMultiValue    : [1,000     ] [0.0000250971317] [39,845.19071]
+    counterTagsName                : [1,000     ] [0.0000598993301] [16,694.67751]
+    counterTagsNameMultiValue      : [1,000     ] [0.0000255017281] [39,213.02893]
+    counterTagsNamePrefix          : [1,000     ] [0.0000610182285] [16,388.54526]
+    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000282423496] [35,407.81887]
 
 Hitmeister\Component\Metrics\Benchmarks\Collector\StatsDaemonShutdownEvent
     Method Name                       Iterations    Average Time      Ops/second
     -------------------------------  ------------  --------------    -------------
-    counterName                    : [1,000     ] [0.0000205719471] [48,609.88584]
-    counterNameMultiValue          : [1,000     ] [0.0000212697983] [47,015.02040]
-    counterPrefixName              : [1,000     ] [0.0000175352097] [57,028.11769]
-    counterPrefixNameMultiValue    : [1,000     ] [0.0000177738667] [56,262.37776]
-    counterTagsName                : [1,000     ] [0.0000202953815] [49,272.29369]
-    counterTagsNameMultiValue      : [1,000     ] [0.0000178763866] [55,939.71645]
-    counterTagsNamePrefix          : [1,000     ] [0.0000175111294] [57,106.53941]
-    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000174787045] [57,212.47835]
+    counterName                    : [1,000     ] [0.0000177154541] [56,447.88975]
+    counterNameMultiValue          : [1,000     ] [0.0000172858238] [57,850.87308]
+    counterPrefixName              : [1,000     ] [0.0000182156563] [54,897.82990]
+    counterPrefixNameMultiValue    : [1,000     ] [0.0000215911865] [46,315.19435]
+    counterTagsName                : [1,000     ] [0.0000220284462] [45,395.84822]
+    counterTagsNameMultiValue      : [1,000     ] [0.0000185434818] [53,927.30499]
+    counterTagsNamePrefix          : [1,000     ] [0.0000192592144] [51,923.19786]
+    counterTagsNamePrefixMultiValue: [1,000     ] [0.0000217378139] [46,002.78585]
+
+Hitmeister\Component\Metrics\Benchmarks\Formatter\InfluxDbLineEvent
+    Method Name                Iterations    Average Time      Ops/second
+    ------------------------  ------------  --------------    -------------
+    counterName             : [10,000    ] [0.0000206048250] [48,532.32187]
+    counterNameAndTags      : [1,000     ] [0.0000351431370] [28,455.05797]
+    counterNameTagsAndSample: [1,000     ] [0.0000465621948] [21,476.65083]
 
 Hitmeister\Component\Metrics\Benchmarks\Formatter\StatsDaemonEvent
     Method Name                Iterations    Average Time      Ops/second
     ------------------------  ------------  --------------    -------------
-    counterName             : [10,000    ] [0.0000084429264] [118,442.34473]
-    counterNameAndTags      : [1,000     ] [0.0000208334923] [47,999.63379]
-    counterNameTagsAndSample: [1,000     ] [0.0000221014023] [45,245.99784]
+    counterName             : [10,000    ] [0.0000089899778] [111,234.97946]
+    counterNameAndTags      : [1,000     ] [0.0000233101845] [42,899.70339]
+    counterNameTagsAndSample: [1,000     ] [0.0000242178440] [41,291.86725]
 ```

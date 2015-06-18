@@ -10,9 +10,18 @@ namespace Hitmeister\Component\Metrics\Buffer;
 
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
 use Hitmeister\Component\Metrics\Metric\Metric;
+use Psr\Log\LoggerInterface;
 
 abstract class Buffer implements BufferInterface
 {
+	/**
+	 * Logger interface.
+	 * If set it will log only errors.
+	 *
+	 * @var LoggerInterface
+	 */
+	protected $logger;
+
 	/**
 	 * Handler.
 	 *
@@ -26,6 +35,25 @@ abstract class Buffer implements BufferInterface
 	 * @var Metric[]
 	 */
 	protected $metrics = [];
+
+	/**
+	 * @inheritdoc
+	 * @codeCoverageIgnore
+	 */
+	public function getLogger()
+	{
+		return $this->logger;
+	}
+
+	/**
+	 * @inheritdoc
+	 * @codeCoverageIgnore
+	 */
+	public function setLogger(LoggerInterface $logger)
+	{
+		$this->logger = $logger;
+		return $this;
+	}
 
 	/**
 	 * @inheritdoc

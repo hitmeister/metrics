@@ -84,57 +84,6 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * Tests add to buffer
-	 */
-	public function testAddToBuffer()
-	{
-		$metric = $this->mockMetric();
-
-		/** @var m\MockInterface|BufferInterface $mockBuffer */
-		$mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
-		$mockBuffer->shouldReceive('add')->withArgs([$metric])->andReturn(true)->once();
-
-		$collector = new Collector();
-		$collector->setBuffer($mockBuffer);
-		$collector->buffer($metric);
-	}
-
-	/**
-	 * Tests add batch to buffer
-	 */
-	public function testAddBatchToBuffer()
-	{
-		$batch = [
-			$this->mockMetric(),
-			$this->mockMetric(),
-		];
-
-		/** @var m\MockInterface|BufferInterface $mockBuffer */
-		$mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
-		$mockBuffer->shouldReceive('addBatch')->withArgs([$batch])->andReturn(true)->once();
-
-		$collector = new Collector();
-		$collector->setBuffer($mockBuffer);
-		$collector->bufferBatch($batch);
-	}
-
-	/**
-	 * Tests add empty batch to buffer
-	 */
-	public function testAddEmptyBatchToBuffer()
-	{
-		$batch = [];
-
-		/** @var m\MockInterface|BufferInterface $mockBuffer */
-		$mockBuffer = m::mock('\Hitmeister\Component\Metrics\Buffer\BufferInterface');
-		$mockBuffer->shouldNotReceive('addBatch');
-
-		$collector = new Collector();
-		$collector->setBuffer($mockBuffer);
-		$collector->bufferBatch($batch);
-	}
-
-	/**
 	 * Returns test cases for counter
 	 *
 	 * @return array

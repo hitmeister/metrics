@@ -10,20 +10,10 @@ namespace Hitmeister\Component\Metrics;
 use Hitmeister\Component\Metrics\Buffer\BufferInterface;
 use Hitmeister\Component\Metrics\Buffer\ImmediateBuffer;
 use Hitmeister\Component\Metrics\Handler\HandlerInterface;
-use Hitmeister\Component\Metrics\Metric\Metric;
 use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
-use Psr\Log\LoggerInterface;
 
 class Collector
 {
-	/**
-	 * Logger interface.
-	 * If set it will log only errors.
-	 *
-	 * @var LoggerInterface
-	 */
-	private $logger;
-
 	/**
 	 * Prefix for metrics.
 	 *
@@ -52,30 +42,6 @@ class Collector
 	public function __construct()
 	{
 		$this->buffer = new ImmediateBuffer();
-	}
-
-	/**
-	 * Returns logger.
-	 *
-	 * @return LoggerInterface
-	 * @codeCoverageIgnore
-	 */
-	public function getLogger()
-	{
-		return $this->logger;
-	}
-
-	/**
-	 * Sets logger.
-	 *
-	 * @param LoggerInterface $logger
-	 * @return $this
-	 * @codeCoverageIgnore
-	 */
-	public function setLogger(LoggerInterface $logger)
-	{
-		$this->logger = $logger;
-		return $this;
 	}
 
 	/**
@@ -194,56 +160,6 @@ class Collector
 	}
 
 	/**
-	 * Adds metric into the buffer
-	 *
-	 * @param Metric $metric
-	 * @return $this
-	 */
-	public function buffer(Metric $metric)
-	{
-		try {
-			$this->buffer->add($metric);
-		} catch (\Exception $e) {
-			// @codeCoverageIgnoreStart
-			if ($this->logger) {
-				$this->logger->error('Unable to save metric into the buffer', [
-					'exception' => $e,
-					'metric' => $metric,
-				]);
-			}
-			// @codeCoverageIgnoreEnd
-		}
-		return $this;
-	}
-
-	/**
-	 * Adds batch of metrics into the buffer
-	 *
-	 * @param Metric[] $metrics
-	 * @return $this
-	 */
-	public function bufferBatch(array $metrics)
-	{
-		if (empty($metrics)) {
-			return $this;
-		}
-
-		try {
-			$this->buffer->addBatch($metrics);
-		} catch (\Exception $e) {
-			// @codeCoverageIgnoreStart
-			if ($this->logger) {
-				$this->logger->error('Unable to save metric into the buffer', [
-					'exception' => $e,
-					'batch_size' => count($metrics),
-				]);
-			}
-			// @codeCoverageIgnoreEnd
-		}
-		return $this;
-	}
-
-	/**
 	 * Increments one or more metrics to value points.
 	 *
 	 * @param string|array $names
@@ -280,7 +196,8 @@ class Collector
 	public function counter($names, $value, $sampleRate = 1.0)
 	{
         $metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\CounterMetric', $names, $value, $sampleRate);
-        return $this->bufferBatch($metrics);
+		$this->buffer->addBatch($metrics);
+        return $this;
 	}
 
 	/**
@@ -295,7 +212,8 @@ class Collector
 	public function timer($names, $value, $sampleRate = 1.0)
 	{
 		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\TimerMetric', $names, $value, $sampleRate);
-		return $this->bufferBatch($metrics);
+		$this->buffer->addBatch($metrics);
+		return $this;
 	}
 
 	/**
@@ -310,7 +228,8 @@ class Collector
 	public function memory($names, $value, $sampleRate = 1.0)
 	{
 		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\MemoryMetric', $names, $value, $sampleRate);
-		return $this->bufferBatch($metrics);
+		$this->buffer->addBatch($metrics);
+		return $this;
 	}
 
 	/**
@@ -323,7 +242,8 @@ class Collector
 	public function gauge($names, $value)
 	{
 		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\GaugeMetric', $names, $value);
-		return $this->bufferBatch($metrics);
+		$this->buffer->addBatch($metrics);
+		return $this;
 	}
 
 	/**
@@ -336,7 +256,8 @@ class Collector
 	public function unique($names, $value)
 	{
 		$metrics = $this->createMetrics('\Hitmeister\Component\Metrics\Metric\UniqueMetric', $names, $value);
-		return $this->bufferBatch($metrics);
+		$this->buffer->addBatch($metrics);
+		return $this;
 	}
 
 	/**
