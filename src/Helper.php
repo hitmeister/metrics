@@ -11,20 +11,6 @@ namespace Hitmeister\Component\Metrics;
 class Helper
 {
 	/**
-	 * List of timers
-	 *
-	 * @var array
-	 */
-	private static $timers = [];
-
-	/**
-	 * List of memory usages
-	 *
-	 * @var array
-	 */
-	private static $memoryUsages = [];
-
-	/**
 	 * Sanitize string.
 	 *
 	 * @param string $string
@@ -56,59 +42,5 @@ class Helper
 			$pairs[] = $key.$delimiter.$value;
 		}
 		return implode($delimiter, $pairs);
-	}
-
-	/**
-	 * Starts timer
-	 *
-	 * @param string $name
-	 */
-	public static function startTimer($name)
-	{
-		self::$timers[$name] = microtime(true) * 1000;
-	}
-
-	/**
-	 * Stops timer and returns number of milliseconds elapsed from start
-	 *
-	 * @param string $name
-	 * @return int
-	 */
-	public static function stopTimer($name)
-	{
-		if (!isset(self::$timers[$name])) {
-			return 0;
-		}
-		$time = (microtime(true) * 1000) - self::$timers[$name];
-
-		unset(self::$timers[$name]);
-		return (int)$time;
-	}
-
-	/**
-	 * Saves current memory usage
-	 *
-	 * @param string $name
-	 */
-	public static function startTrackMemory($name)
-	{
-		self::$memoryUsages[$name] = memory_get_usage(true);
-	}
-
-	/**
-	 * Returns number of bytes consumed from start
-	 *
-	 * @param string $name
-	 * @return int
-	 */
-	public static function stopTrackMemory($name)
-	{
-		if (!isset(self::$memoryUsages[$name])) {
-			return 0;
-		}
-		$memory = memory_get_usage(true) - self::$memoryUsages[$name];
-
-		unset(self::$memoryUsages[$name]);
-		return $memory;
 	}
 }

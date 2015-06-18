@@ -56,36 +56,4 @@ class HelperTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($expected3, Helper::mapAsString($mapSanitize));
 		$this->assertEquals($expected4, Helper::mapAsString($mapSanitize, false, ':'));
 	}
-
-	/**
-	 * Tests time tracking functions
-	 */
-	public function testTimerFunctions()
-	{
-		Helper::startTimer('timer1');
-		usleep(1000);
-		$timer1 = Helper::stopTimer('timer1');
-		$this->assertGreaterThanOrEqual(1, $timer1);
-
-		$timer2 = Helper::stopTimer('not_exist');
-		$this->assertEquals(0, $timer2);
-	}
-
-	/**
-	 * Test memory tracking functions
-	 */
-	public function testMemoryFunctions()
-	{
-		Helper::startTrackMemory('memory1');
-
-		// Allocate memory
-		$a = str_repeat('string', mt_rand(99999,9999999));
-
-		$memory1 = Helper::stopTrackMemory('memory1');
-		$this->assertGreaterThanOrEqual(1, $memory1);
-		unset($a);
-
-		$memory2 = Helper::stopTrackMemory('not_exist');
-		$this->assertEquals(0, $memory2);
-	}
 }
