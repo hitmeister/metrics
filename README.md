@@ -4,7 +4,99 @@
 [![Coverage Status](http://img.shields.io/coveralls/hitmeister/metrics.svg)](https://coveralls.io/r/hitmeister/metrics?branch=master)
 [![Total Downloads](http://img.shields.io/packagist/dt/hitmeister/metrics.svg)](https://packagist.org/packages/hitmeister/metrics)
 
-Metrics forwarder for PHP.
+Metrics forwarder for PHP. We can forward to [statsd](https://github.com/etsy/statsd) and [InfluxDB](https://influxdb.com/).
+
+## Installation
+
+You can install the component in two different ways:
+
+* Install it via Composer: **hitmeister/metrics** on [Packagist](https://packagist.org/packages/hitmeister/metrics);
+* Use the [official Git repository](https://github.com/hitmeister/metrics): `git clone git@github.com:hitmeister/metrics.git`.
+
+## Usage
+
+Here is some examples how you can use this library.
+
+### Stats Daemon
+
+```php
+use Hitmeister\Component\Metrics\Collector;
+use Hitmeister\Component\Metrics\Handler\StatsDaemonHandler;
+
+// Create new handler
+$handler = new StatsDaemonHandler('127.0.0.1', 8125);
+
+// Create new collector and set handler
+$collector = new Collector();
+$collector->setHandler($handler);
+
+// Increment one stats
+$collector->increment('hello_world');
+
+// Increments `one_long_task` counter and reports used memory and elapsed time
+$collector->closure('one_long_task', function(){
+    for ($i = 0; $i < 1000; $i++) {
+        usleep(100);
+    }
+});
+```
+
+### InfluxDB 0.9.x UDP
+
+```php
+use Hitmeister\Component\Metrics\Collector;
+use Hitmeister\Component\Metrics\Handler\InfluxDb\UdpHandler;
+
+// Create new handler
+$handler = new UdpHandler('127.0.0.1', 4444);
+
+// Create new collector and set handler
+$collector = new Collector();
+$collector->setHandler($handler);
+
+// Set global tags
+$collector->setTags([
+    'env' => 'development',
+    'instance' => 'web01',
+]);
+
+// Increment one stats
+$collector->increment('hello', ['operation' => 'world']);
+
+// Increments `one_long_task` counter and reports used memory and elapsed time
+$collector->closure('one_long_task', function(){
+    for ($i = 0; $i < 1000; $i++) {
+        usleep(100);
+    }
+});
+```
+
+### Flush metrics on script shutdown
+
+```php
+use Hitmeister\Component\Metrics\Buffer\OnShutdownBuffer;
+use Hitmeister\Component\Metrics\Collector;
+use Hitmeister\Component\Metrics\Handler\StatsDaemonHandler;
+
+// Create new handler
+$handler = new StatsDaemonHandler('127.0.0.1', 8125);
+
+// Create buffer
+$buffer = new OnShutdownBuffer();
+$buffer->setHandler($handler);
+
+// Create new collector and set buffer
+$collector = new Collector();
+$collector->setBuffer($buffer);
+
+// Increment some stats
+for ($i = 0; $i < 100; $i++) {
+    $collector->increment('stats_'.$i);
+}
+
+// All metrics will be flushed to the stats daemon after script shutdown
+// It uses register_shutdown_function function under the hood
+```
 
 ## Some benchmarks
 
