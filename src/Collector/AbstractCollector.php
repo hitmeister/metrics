@@ -8,8 +8,13 @@
 namespace Hitmeister\Component\Metrics\Collector;
 
 use Hitmeister\Component\Metrics\Buffer\BufferInterface;
+use Hitmeister\Component\Metrics\Metric\CounterMetric;
+use Hitmeister\Component\Metrics\Metric\GaugeMetric;
+use Hitmeister\Component\Metrics\Metric\MemoryMetric;
 use Hitmeister\Component\Metrics\Metric\Metric;
 use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
+use Hitmeister\Component\Metrics\Metric\TimerMetric;
+use Hitmeister\Component\Metrics\Metric\UniqueMetric;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 abstract class AbstractCollector implements CollectorInterface
@@ -58,8 +63,7 @@ abstract class AbstractCollector implements CollectorInterface
     public function counter($names, $value, array $tags = [], $sampleRate = 1.0)
     {
         $names = (array)$names;
-        $className = '\Hitmeister\Component\Metrics\Metric\CounterMetric';
-        $metrics = $this->createMetrics($className, $names, $value, $tags, $sampleRate);
+        $metrics = $this->createMetrics(CounterMetric::class, $names, $value, $tags, $sampleRate);
         $this->buffer->addBatch($metrics);
         return $this;
     }
@@ -70,8 +74,7 @@ abstract class AbstractCollector implements CollectorInterface
     public function timer($names, $value, array $tags = [], $sampleRate = 1.0)
     {
         $names = (array)$names;
-        $className = '\Hitmeister\Component\Metrics\Metric\TimerMetric';
-        $metrics = $this->createMetrics($className, $names, $value, $tags, $sampleRate);
+        $metrics = $this->createMetrics(TimerMetric::class, $names, $value, $tags, $sampleRate);
         $this->buffer->addBatch($metrics);
         return $this;
     }
@@ -82,8 +85,7 @@ abstract class AbstractCollector implements CollectorInterface
     public function memory($names, $value, array $tags = [], $sampleRate = 1.0)
     {
         $names = (array)$names;
-        $className = '\Hitmeister\Component\Metrics\Metric\MemoryMetric';
-        $metrics = $this->createMetrics($className, $names, $value, $tags, $sampleRate);
+        $metrics = $this->createMetrics(MemoryMetric::class, $names, $value, $tags, $sampleRate);
         $this->buffer->addBatch($metrics);
         return $this;
     }
@@ -94,8 +96,7 @@ abstract class AbstractCollector implements CollectorInterface
     public function gauge($names, $value, array $tags = [])
     {
         $names = (array)$names;
-        $className = '\Hitmeister\Component\Metrics\Metric\GaugeMetric';
-        $metrics = $this->createMetrics($className, $names, $value, $tags);
+        $metrics = $this->createMetrics(GaugeMetric::class, $names, $value, $tags);
         $this->buffer->addBatch($metrics);
         return $this;
     }
@@ -106,8 +107,7 @@ abstract class AbstractCollector implements CollectorInterface
     public function unique($names, $value, array $tags = [])
     {
         $names = (array)$names;
-        $className = '\Hitmeister\Component\Metrics\Metric\UniqueMetric';
-        $metrics = $this->createMetrics($className, $names, $value, $tags);
+        $metrics = $this->createMetrics(UniqueMetric::class, $names, $value, $tags);
         $this->buffer->addBatch($metrics);
         return $this;
     }
