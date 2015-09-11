@@ -43,6 +43,20 @@ $collector->closure('one_long_task', function(){
 
 ### InfluxDB 0.9.x UDP
 
+#### Important notice
+
+If you are using InfluxDb >= 0.9.3 you have to specify new Formatter for handler.
+
+```php
+use \Hitmeister\Component\Metrics\Formatter\InfluxDb\LineFormatter;
+// .... 
+$handler = new UdpHandler('127.0.0.1', 4444);
+$handler->setFormatter(new LineFormatter());
+// ....
+```
+
+If you are using InfluxDB <= 0.9.2 you don't have to change anything.
+
 ```php
 use Hitmeister\Component\Metrics\Collector;
 use Hitmeister\Component\Metrics\Handler\InfluxDb\UdpHandler;

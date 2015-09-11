@@ -14,6 +14,8 @@ use Hitmeister\Component\Metrics\Metric\SamplingMetricInterface;
 /**
  * Class InfluxDbLineFormatter
  *
+ * Warning! Please use this one for InfluxDb <= 0.9.2
+ *
  * @package Hitmeister\Component\Metrics\Formatter
  */
 class InfluxDbLineFormatter extends Formatter

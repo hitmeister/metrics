@@ -6,7 +6,7 @@
  * Time: 08:58
  */
 
-namespace Formatter;
+namespace Hitmeister\Component\Metrics\Tests\Formatter;
 
 use Hitmeister\Component\Metrics\Formatter\InfluxDbLineFormatter;
 use Hitmeister\Component\Metrics\Metric\CounterMetric;
