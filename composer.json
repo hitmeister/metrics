@@ -15,12 +15,12 @@
   "keywords": [
     "metrics",
     "monitoring",
-	"counter",
-	"timer",
-	"gauge",
-	"statsd",
-	"influxdb",
-	"influx"
+    "counter",
+    "timer",
+    "gauge",
+    "statsd",
+    "influxdb",
+    "influx"
   ],
   "homepage": "https://www.hitmeister.de/",
   "support": {
@@ -31,7 +31,7 @@
   "require": {
     "clue/socket-raw": "~1.2",
     "php": ">=5.5",
-	"psr/log": "~1.0",
+    "psr/log": "~1.0",
     "symfony/stopwatch": "~2.7"
   },
   "require-dev": {
